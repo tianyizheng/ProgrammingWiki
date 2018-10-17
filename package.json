@@ -1,0 +1,22 @@
+{
+  "name": "programmingwiki",
+  "version": "1.0.0",
+  "description": "AlexaSkill lambda function",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tianyizheng/ProgrammingWiki.git"
+  },
+  "author": "Tianyi Zheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tianyizheng/ProgrammingWiki/issues"
+  },
+  "homepage": "https://github.com/tianyizheng/ProgrammingWiki#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
+}
