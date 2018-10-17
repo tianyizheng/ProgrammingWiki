@@ -1,23 +1,27 @@
 var request = require("request");
+var cheerio = require("cheerio");
 
-var argv = require("yargs").argv;
+var targetClass = "div.div-col.columns.column-width";
 
-var query = argv.q || "english";
-
-var url = `https://en.wikipedia.org/w/api.php?action=opensearch&search="+ ${query} +"&format=json`;
+var wikiBase = "https://en.wikipedia.org";
+var url = "https://en.wikipedia.org/wiki/List_of_programming_languages";
+var targetUrl;
 
 request(url, function(err, response, body) {
     if (err) {
         var error = "cannot connect to the server";
         console.log(error);
     } else {
-        var wiki = JSON.parse(body);
-        for (var i = 0; i < wiki[1].length; i++) {
-            var message =
-                `You searched for ${wiki[1][i]}: And these are the details - ${
-                    wiki[2][i]
-                } Follow this link to read more - ${wiki[3][i]}` + "\n";
-            console.log(message);
-        }
+        var $ = cheerio.load(body);
+        var diV = $(targetClass);
+        var divItem = diV[Math.floor(Math.random() * diV.length)];
+        var a = $("a", divItem);
+        var item = a[Math.floor(Math.random() * a.length)];
+        targetUrl = $(item).attr("href");
+        console.log(targetUrl);
     }
+    targetUrl = wikiBase + targetUrl;
+    request(targetUrl, function(err, response, body) {
+        console.log(body);
+    });
 });
