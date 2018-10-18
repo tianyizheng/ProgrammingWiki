@@ -12,32 +12,50 @@ const onStart = () => {
 
 const onLaunch = () => {
   return buildResponse(
-    "Welcome. I can tell you a random programming language",
+    "Welcome. I can tell you about a random programming language. Just ask tell me a language",
     "welcome",
-    "I can tell you a random programming language",
+    "I can tell you about a random programming language. Just ask tell me a language",
     "",
     false
   );
 };
 
-const onIntent = async (event) => {
+const onIntent = async event => {
   var intentName = event.request.intent.name;
   if (stopIntents.includes(intentName)) {
-    return buildResponse(
-      "Thank you. Bye!",
-      "Bye bye",
-      "bye",
-      "",
-      true
-      );
+    return buildResponse("Thank you. Bye!", "Bye bye", "bye", "", true);
   } else if (intentName == "languageSummary") {
     let result = await summary();
     var name = result[0] + ". ";
     var abstract = result[1];
     return buildResponse(
       "I can tell you about " + name + abstract,
-      "Summary",
-      result,
+      name,
+      abstract,
+      "",
+      false
+    );
+  } else if (intentName == "HelpIntent") {
+    return buildResponse(
+      "You can ask me to tell you a language.",
+      "",
+      "",
+      "",
+      false
+    );
+  } else if (intentName == "FallbackIntent") {
+    return buildResponse(
+      "Sorry I can't help you with that.",
+      "",
+      "",
+      "",
+      false
+    );
+  } else {
+    return buildResponse(
+      "Sorry I can't help you with that.",
+      "",
+      "",
       "",
       false
     );
@@ -73,8 +91,8 @@ const buildResponse = function(
           text: reprompt
         }
       },
-      shouldEndSession: end,
-    },
+      shouldEndSession: end
+    }
   };
 };
 
@@ -91,5 +109,3 @@ module.exports.hello = async (event, context, callback) => {
     callback(null, onEnd());
   }
 };
-
-
