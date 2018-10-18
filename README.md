@@ -7,5 +7,6 @@ This is a serverless function built with the serverless framework. It is intende
 ### Todo
 - [x] Return summary with Wikipedia API
 - [x] Deploy to aws Lambda
-- [ ] Set-up api endpoint and key
 - [x] Integrate with Alexa skill
+- [ ] Set-up api endpoint and key
+- [ ] Remove non-english characters from response
