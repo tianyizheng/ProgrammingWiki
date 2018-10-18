@@ -1,13 +1,95 @@
 "use strict";
-var handler = require("./index.js");
+var summary = require("./index.js");
+const stopIntents = [
+  "AMAZON.NoIntent",
+  "AMAZON.StopIntent",
+  "AMAZON.CancelIntent"
+];
 
-module.exports.hello = async (event, context) => {
-  let result = await handler();
+const onStart = () => {
+  console.log("Session Started");
+};
+
+const onLaunch = () => {
+  return buildResponse(
+    "Welcome. I can tell you a random programming language",
+    "welcome",
+    "I can tell you a random programming language",
+    "",
+    false
+  );
+};
+
+const onIntent = async (event) => {
+  var intentName = event.request.intent.name;
+  if (stopIntents.includes(intentName)) {
+    return buildResponse(
+      "Thank you. Bye!",
+      "Bye bye",
+      "bye",
+      "",
+      true
+      );
+  } else if (intentName == "languageSummary") {
+    let result = await summary();
+    var name = result[0] + ". ";
+    var abstract = result[1];
+    return buildResponse(
+      "I can tell you about " + name + abstract,
+      "Summary",
+      result,
+      "",
+      false
+    );
+  }
+};
+
+const onEnd = function() {
+  console.log("Session Ended");
+};
+
+const buildResponse = function(
+  output_speech,
+  card_title,
+  card_content,
+  reprompt,
+  end
+) {
   return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: result,
-      input: event
-    })
+    version: "1.0",
+    response: {
+      outputSpeech: {
+        type: "PlainText",
+        text: output_speech
+      },
+      card: {
+        type: "Simple",
+        title: card_title,
+        content: card_content
+      },
+      reprompt: {
+        outputSpeech: {
+          type: "PlainText",
+          text: reprompt
+        }
+      },
+      shouldEndSession: end,
+    },
   };
 };
+
+module.exports.hello = async (event, context, callback) => {
+  if (event.session.new) {
+    onStart();
+  }
+  var intent = event.request.type;
+  if (intent == "LaunchRequest") {
+    callback(null, onLaunch());
+  } else if (intent == "IntentRequest") {
+    callback(null, await onIntent(event));
+  } else if (intent == "SessionEndedRequest") {
+    callback(null, onEnd());
+  }
+};
+
+

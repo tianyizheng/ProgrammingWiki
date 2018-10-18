@@ -24,7 +24,7 @@ module.exports = async function() {
         await request(targetUrl).then(function(body) {
             var $ = cheerio.load(body);
             var summary = $("p.lead");
-            result = name + "\n" + summary.text();
+            result = [name,summary.text()];
         });
     });
     return result;
