@@ -1,10 +1,11 @@
 'use strict';
+var handler = require("./index.js");
 
 module.exports.hello = async (event, context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
+      message: handler(),
       input: event,
     }),
   };
