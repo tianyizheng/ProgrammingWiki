@@ -1,4 +1,4 @@
-var request = require("request");
+var request = require("request-promise");
 var cheerio = require("cheerio");
 var targetClass = "div.div-col.columns.column-width";
 
@@ -8,32 +8,27 @@ var dbPedia = "http://dbpedia.org/sparql/";
 var url = "https://en.wikipedia.org/wiki/List_of_programming_languages";
 var targetUrl;
 
-module.exports = function () {
-    request(url, function(err, response, body) {
-        if (err) {
-            var error = "cannot connect to the server";
-            console.log(error);
-        } else {
-            var $ = cheerio.load(body);
-            var diV = $(targetClass);
-            var divItem = diV[Math.floor(Math.random() * diV.length)];
-            var a = $("a", divItem);
-            var item = a[Math.floor(Math.random() * a.length)];
-            console.log($(item).text());
-            targetUrl = $(item).attr("href");
-        }
+module.exports = async function() {
+    var name;
+    var result;
+    await request(url).then(async function(body) {
+        var $ = cheerio.load(body);
+        var diV = $(targetClass);
+        var divItem = diV[Math.floor(Math.random() * diV.length)];
+        var a = $("a", divItem);
+        var item = a[Math.floor(Math.random() * a.length)];
+        name = $(item).text();
+        targetUrl = $(item).attr("href");
         targetUrl = wikiBase + targetUrl;
         targetUrl = getDbpediaUrl(targetUrl);
-
-        request(targetUrl, function(err, response, body) {
+        await request(targetUrl).then(function(body) {
             var $ = cheerio.load(body);
             var summary = $("p.lead");
-            console.log(summary.text());
+            result = name + "\n" + summary.text();
         });
     });
-    return "hello";
-}
-
+    return result;
+};
 
 getDbpediaUrl = function(url) {
     if (url.indexOf("wikipedia") != -1) {

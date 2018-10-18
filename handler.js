@@ -1,13 +1,14 @@
-'use strict';
+"use strict";
 var handler = require("./index.js");
 
 module.exports.hello = async (event, context) => {
+  let result = await handler();
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: handler(),
-      input: event,
-    }),
+      message: result,
+      input: event
+    })
   };
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
