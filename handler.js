@@ -15,7 +15,6 @@ const onLaunch = () => {
     "Welcome. I can tell you about a random programming language. Just ask tell me a language",
     "welcome",
     "I can tell you about a random programming language. Just ask tell me a language",
-    "",
     false
   );
 };
@@ -23,7 +22,7 @@ const onLaunch = () => {
 const onIntent = async event => {
   var intentName = event.request.intent.name;
   if (stopIntents.includes(intentName)) {
-    return buildResponse("Thank you. Bye!", "Bye bye", "bye", "", true);
+    return buildResponse("Okay. Bye!", "Bye bye", "bye", true);
   } else if (intentName == "languageSummary") {
     let result = await summary();
     var name = result[0] + ". ";
@@ -32,31 +31,27 @@ const onIntent = async event => {
       "I can tell you about " + name + abstract,
       name,
       abstract,
-      "",
       false
     );
-  } else if (intentName == "HelpIntent") {
+  } else if (intentName == "AMAZON.HelpIntent") {
     return buildResponse(
-      "You can ask me to tell you a language.",
-      "",
-      "",
-      "",
+      "You can say: tell me about a language.",
+      "You can say",
+      "tell me about a language.",
       false
     );
-  } else if (intentName == "FallbackIntent") {
+  } else if (intentName == "AMAZON.FallbackIntent") {
     return buildResponse(
       "Sorry I can't help you with that.",
-      "",
-      "",
-      "",
+      "Sorry",
+      "I can't help you with that.",
       false
     );
   } else {
     return buildResponse(
       "Sorry I can't help you with that.",
-      "",
-      "",
-      "",
+      "Sorry",
+      "I can't help you with that.",
       false
     );
   }
@@ -84,12 +79,6 @@ const buildResponse = function(
         type: "Simple",
         title: card_title,
         content: card_content
-      },
-      reprompt: {
-        outputSpeech: {
-          type: "PlainText",
-          text: reprompt
-        }
       },
       shouldEndSession: end
     }
